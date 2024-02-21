@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <section class="row" aria-labelledby="aspnetTitle">
+        <h1 id="title">Single Page Application ASP.NET MVC</h1>
+        <p class="lead">A Single Page Application (SPA) is a web application or website that interacts with the user by dynamically rewriting the current web page with new data from the web server, instead of the default method of the browser loading entire new pages. The goal is faster transitions that make the website feel more like a native app. In an SPA, all necessary HTML, JavaScript, and CSS code is either retrieved by the browser with a single page load, or the appropriate resources are dynamically loaded and added to the page as necessary, usually in response to user actions. Examples of SPAs include Google Maps, Gmail, and Facebook.</p>
+    </section>
+
+    <div class="row">
+        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
+            <h2 id="gettingStartedTitle">About Author</h2>
+            <p>
+                Hello! My name is MD. Shahariar Rokon. I hold a BSc in Statistics and an MSc in Data Science, which equip me with a strong foundation in statistical analysis and data-driven decision making. Additionally, I have a Diploma in Enterprise System Analysis and Design using C#, further broadening my technical skills. My academic background and practical experience make me well-versed in both the theoretical and applied aspects of data science and system design. I’m always eager to apply my knowledge and skills to solve complex problems and create value. Nice to meet you!
+            </p>
+            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </section>
+        <section class="col-md-4" aria-labelledby="librariesTitle">
+            <h2 id="librariesTitle">My Other Projects</h2>
+            <p>You can find my other projects using the following link</p>
+            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </section>
+        <section class="col-md-4" aria-labelledby="hostingTitle">
+            <h2 id="hostingTitle">Contact Me</h2>
+            <p></p>
+            <p>
+                <form action="@Url.Action("GeneratePDF", "Home")" method="post">
+                    <input type="submit" class="btn btn-outline-primary" value="My Short Intro As PDF (ClickMe)" />
+                </form>
+            </p>
+        </section>
+    </div>
+</main>

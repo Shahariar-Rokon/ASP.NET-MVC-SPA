@@ -1,0 +1,152 @@
+﻿@model CodeV4.VM.VmSale
+@{
+    ViewBag.Title = "Single";
+    var listSaleMaster = ViewData["List"] as List<CodeV4.Models.SaleMaster>;
+    var CreateDate = Model.CreateDate == null ? "" :
+        Convert.ToDateTime(Model.CreateDate).ToString("yyyy-MM-dd");
+    var ButtonValue = Model != null && Model.SaleId > 0 ? "Update" : "Submit the Form";
+    var ButtonValue2 = Model != null && Model.SaleId > 0 ? "Update" : "SaveChanges";
+    var indexItem = 0;
+    var radio1 = Model.Gender == "Male" ? "selected" : "";
+    var radio2 = Model.Gender == "Female" ? "selected" : "";
+    var photo = (Model.Photo != null) ? Model.Photo : null;
+}
+<div class="modal fade" id="myFormModal" tabindex="-1" role="dialog" aria-labelledby="myFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myFormModalLabel">Customer Information Form</h5>
+                <button type="button" id="btnTop" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm(
+        "Single",
+        "Sales",
+        new AjaxOptions
+        {
+            OnSuccess = "OnSuccess",
+            OnFailure = "OnFailure",
+            LoadingElementId = "progress",
+            HttpMethod = "POST"
+        }
+, new { enctype = "multipart/form-data" }
+))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.SaleId)
+                    @Html.LabelFor(m => m.CreateDate)
+                    <br />
+                    <input type="date" id="CreateDate" name="CreateDate"
+                           value="@CreateDate" />
+                    <br />
+                    @Html.LabelFor(m => m.CustomerName)
+                    <br />
+                    @Html.TextBoxFor(m => m.CustomerName)
+                    <br />
+                    @Html.LabelFor(m => m.CustomerAddress)
+                    <br />
+                    @Html.TextBoxFor(m => m.CustomerAddress)
+                    <br />
+                    <div>
+                        @Html.LabelFor(m => m.Gender)
+                        <div>
+                            @Html.RadioButtonFor(m => m.Gender, "Male")
+                            @Html.LabelFor(m => m.Gender, "Male")<br />
+                            @Html.RadioButtonFor(m => m.Gender, "Female")
+                            @Html.LabelFor(m => m.Gender, "Female")
+                        </div>
+                    </div>
+                    <br />
+                    @Html.DropDownList("SelectedValue", (IEnumerable<SelectListItem>)ViewData["item"], (Model.ProductType.IsEmpty()) ? "Chose an Option" : Model.ProductType)
+                    <br />
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Photo, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @*@Html.TextBox("img", "", new { type = "file" })*@
+
+                            <input class="btn-dark" type="file" name="img" />
+                        </div>
+                    </div>
+                    <br />
+                    <a class="btn btn-primary" href="/Sales/Single">Reset</a>
+                    <br />
+                    <br />
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ProductName</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <button type="button" onclick="addItem();" class="btn btn-info">Add Item</button>
+                                </tr>
+                            </thead>
+                            <tbody id="tSD">
+                                @foreach (var item in Model.SaleDetails)
+                                {
+                                    var UnitPrice = item.Price / item.Qty;
+                                    indexItem++;
+                                    <tr id="tr_@indexItem">
+                                        <td>
+                                            <input type="text" id="ProductName_@indexItem" name="ProductName" value="@item.ProductName" />
+                                        </td>
+
+                                        <td>
+                                            <input type="text" id="UnitPrice_@indexItem" name="UnitPrice" value="@UnitPrice" style="text-align:right" oninput="calculatePrice(@indexItem);" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Qty_@indexItem" name="Qty" value="@item.Qty" style="text-align:right" oninput="calculatePrice(@indexItem);" />
+                                        </td>
+                                        <td>
+                                            <input type="text" id="Price_@indexItem" name="Price" value="@item.Price" style="text-align:right" />
+                                        </td>
+                                        <td><a href="javascript:void(0)" onclick="removeItem(@indexItem);">Remove</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="btnUpdate">
+                            @ButtonValue
+                        </button>
+                        <button type="button" id="btnClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                }
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myFormModal').modal('show');
+        $('#btnClose').click(function () {
+            $('#myFormModal').modal('hide');
+        });
+        $('#btnTop').click(function () {
+            $('#myFormModal').modal('hide');
+        });
+    });
+
+</script>
+<script>
+    function calculatePrice(id) {
+        var Qty = parseInt(document.getElementById('Qty_' + id).value);
+        var UnitPrice = parseFloat(document.getElementById('UnitPrice_' + id).value);
+        var total = 0;
+        if (Qty && UnitPrice) {
+            var Price = UnitPrice * Qty;
+            document.getElementById('Price_' + id).value = Price;
+            total += Price;
+        }
+        document.getElementById('Total').value = total;
+    }
+</script>
+
