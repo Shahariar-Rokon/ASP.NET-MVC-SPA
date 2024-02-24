@@ -30,8 +30,6 @@ Update-Database
 6. Run the project: Press F5 or click the “Run” button to launch the project in your browser.
 ## Usage
 
-# Usage
-
 To use this project, follow these steps:
 
 1. **Navigate to the app**: Open your browser and go to the URL where the app is hosted. For example, `https://localhost:44302/`.
